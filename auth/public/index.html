@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Website</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+    async function signup(){
+        const username = document.getElementById("signup-username").value;
+        const password = document.getElementById("signup-password").value;
+
+        await axios.post("http://localhost:3000/signup",{
+            username: username,
+            password: password
+        });
+        alert("You are signed up!")
+
+    }
+
+    async function signin(){
+        const username = document.getElementById("signin-username").value;
+        const password = document.getElementById("signin-password").value;
+
+        const response = await axios.post("http://localhost:3000/signin",{
+            username: username,
+            password: password
+        });
+
+        localStorage.setItem("token", response.data.token)
+
+        alert("You are signed in!")
+
+    }
+
+    async function getUserInfromation(){
+        const response = await axois.get("http:/localhost:3000/me",{
+            headers: {
+                token: localStorage.getItem("token")
+            }
+        })
+        document.getElementById("Information").innerHTML = "Usename " + response.data.username + "Password " + response.data.password
+    }
+    getUserInfromation();
+
+</script>
+<body>
+
+    <div>
+        Signup
+        <input id="signup-username" type="text" name="username" placeholder="username">
+        <input id="signup-password" type="password" name="password" placeholder="password">
+        <button onclick="signup()">Submit</button>
+    </div>
+    <div>
+        Signin
+        <input id="signin-username" type="username" name="username" placeholder="username">
+        <input id="signin-password" type="passsword" name="password" placeholder="password">
+        <button onclick="signin()">Submit</button>
+    </div>
+    <div>
+        User Infromation:
+        <div id="Infromation"></div>
+    </div>
+    <div>
+        <button onclick="logout()">Logout</button>
+    </div>
+    
+</body>
+</html>
